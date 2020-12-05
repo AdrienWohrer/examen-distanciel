@@ -1,7 +1,7 @@
 # examen-distanciel
-génération et envoi de sujets latex individualisés pour les examens à distance
+Génération et envoi de sujets latex individualisés pour les examens à distance
 
-Ensemble de scipts sous linux, permettant:
+Ensemble de scripts sous linux, permettant:
 
 - d'ENVOYER par mail un sujet individualisé à chaque étudiant
 
@@ -12,7 +12,7 @@ Ensemble de scipts sous linux, permettant:
     2) personnaliser chaque sujet avec de la génération aléatoire de paramètres
     
 -------------------------------------------------------------
-Exemples, par ordre de complexité
+                EXEMPLES
 
 Exemple 1 : assignation de sujets (préexistants) + envoi par mail + aide à la correction
 
@@ -24,16 +24,20 @@ Exemple 3 : idem + génération de sujets individualisés avec génération alé
                 EXÉCUTABLES REQUIS
 
 Pour tous les scripts:
+
     - ruby (avec quelques "gem" requis -- a priori plutôt standard)
     - unoconv (version ligne de commande de libreoffice)
 
 Pour la génération basique de sujets avec versions:
+
     - pdflatex (avec quelques package latex requis -- a priori plutôt standard)
 
 Pour la génération aléatoire de paramètres numériques:
+    
     - python (avec le module numpy)
 
 Pour l'aide à la correction:
+    
     - un navigateur de fichier, lecteur de photos, lecteur de pdf, etc.
     - wmctrl (manipulation des fenêtres x11 en ligne de commande) -- optionnel
 
