@@ -1,0 +1,49 @@
+=======================================================================================
+Exemple 2 : idem + génération de sujets individualisés avec latex
+=======================================================================================
+
+
+assignation.ods : coordonnées et assignation des sujets pour chaque étudiant
+
+Examen.tex : sources du sujet d'examen (incluant différentes versions possibles + corrections)
+
+
+GÉNÉRATION DES SUJETS
+======================
+    
+    - Ouvrir un terminal dans ce répertoire, taper 'ruby genere_sujets.rb'
+
+    - Lit "assignation.ods", récupère les paramètres de chaque étudiant, et génère son sujet individuel en conséquence, avec pdflatex.
+    
+    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent : ouvrir le fichier genere_sujets.rb avec un éditeur de texte
+
+    - Lire les sources dans 'Examen.tex' afin de comprendre le lien entre "assignation.ods" et les variables latex correspondantes
+    
+    
+ENVOI DES SUJETS
+================
+    
+    - Ouvrir un terminal dans ce répertoire, taper 'ruby envoie_sujets.rb'
+
+    - Fonctionne exactement comme dans l'exemple 1
+    
+
+AIDE À LA CORRECTION
+====================
+
+    - Fonctionne exactement comme dans l'exemple 1 (les RENDUS ne sont pas remis ici, voir l'exemple 1)
+
+
+Exécutables requis:
+==================
+
+Pour tous les scripts:
+    - ruby (avec les quelques "gem" requis installés -- a priori ils sont plutôt standard)
+    - unoconv (version ligne de commande de libreoffice)
+
+Pour la génération basique de sujets:
+    - pdflatex
+
+Pour l'aide à la correction:
+    - un navigateur de fichier, lecteur de photos, lecteur de pdf, etc.
+    - wmctrl (manipulation des fenêtres x11 en ligne de commande) -- optionnel

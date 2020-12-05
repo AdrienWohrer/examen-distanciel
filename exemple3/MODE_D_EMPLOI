@@ -1,0 +1,65 @@
+=======================================================================================
+Exemple 3 : idem + génération de sujets individualisés avec données aléatoires
+=======================================================================================
+
+
+assignation.ods : coordonnées et assignation des sujets pour chaque étudiant
+
+Examen.tex : sources du sujet d'examen (incluant les corrections)
+
+defaultparams.tex : valeurs par défaut des données latex individuelles
+
+generation_aleatoire.py : code de génération aléatoire des données individuelles (ici, par exemple, en python)
+
+
+GÉNÉRATION DES DONNÉES
+======================
+
+    - Ouvrir un terminal dans ce répertoire, taper 'ruby genere_donnees.rb'
+    
+    - Lit "assignation.ods", puis appelle le script python "generation_aleatoire.py". Ceci crée un *fichier de données* latex spécifique, pour chaque étudiant, avec les données aléatoires tirées pour cet étudiant. Par défaut ces fichiers sont créés dans le répertoire "Données_indiv".
+    
+
+GÉNÉRATION DES SUJETS
+======================
+    
+    - Ouvrir un terminal dans ce répertoire, taper 'ruby genere_sujets.rb'
+
+    - Lit "assignation.ods", récupère les paramètres de chaque étudiant, et génère son sujet individuel en conséquence, avec pdflatex.
+    
+    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent : ouvrir le fichier genere_sujets.rb avec un éditeur de texte
+
+    - Lire les sources dans 'Examen.tex', ainsi que le fichiers de données latex individuels, afin de comprendre comment ces variables latex sont "incorporées" dans le texte.
+    
+    
+ENVOI DES SUJETS
+================
+    
+    - Ouvrir un terminal dans ce répertoire, taper 'ruby envoie_sujets.rb'
+
+    - Fonctionne exactement comme dans les exemples 1 et 2
+    
+
+AIDE À LA CORRECTION
+====================
+
+    - Fonctionne exactement comme dans l'exemple 1 (les RENDUS ne sont pas remis ici, voir l'exemple 1)
+
+
+Exécutables requis:
+==================
+
+Pour tous les scripts:
+    - ruby (avec les quelques "gem" requis installés -- a priori ils sont plutôt standard)
+    - unoconv (version ligne de commande de libreoffice)
+
+Pour la génération basique de sujets:
+    - pdflatex
+
+Pour la génération aléatoire de paramètres numériques:
+    - python (avec le module numpy)
+
+Pour l'aide à la correction:
+    - un navigateur de fichier, lecteur de photos, lecteur de pdf, etc.
+    - wmctrl (manipulation des fenêtres x11 en ligne de commande) -- optionnel
+

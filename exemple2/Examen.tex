@@ -1,0 +1,128 @@
+% -*- coding: utf-8; -*-
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french,british]{babel}
+
+
+%%%%%%%%% Gestion de la correction
+
+\usepackage{ifthen}
+\usepackage{framed}
+\usepackage{environ}
+\usepackage{xcolor}
+\colorlet{shadecolor}{gray!10!red!5}
+
+\ifdefined\iscorrec     % Définition depuis le script d'appel
+\else
+  \def\iscorrec{1}      % 0=> sujet, 1=>corrigé
+\fi
+
+%%% \begin{correction}....\end{correction}
+%   le contenu ne s'affiche que si \iscorrec=1
+
+\NewEnviron{correction}{\ifthenelse{\iscorrec=1}{%
+    \medskip\medskip\par\begin{shaded}\noindent{\bf Solution:} \BODY \end{shaded}
+}{}}
+
+
+%%%%%%%%% Paramètres individuels du sujet
+
+%%% Valeurs par défaut (pour une compilation isolée)
+
+\ifdefined\assignedparameters\else                           
+    \def\assignedparameters{1,1,Toto}   % dans cet exemple, 3 paramètres requis
+\fi
+
+%%% Liste permettant d'accéder aux assignedparameters: \ListAP[1], \ListAP[2], etc.
+
+\usepackage{listofitems}
+\ifx\assignedparameters\empty       % (erreur de \readlist dans ce cas)
+\else
+    \readlist*\ListAP{\assignedparameters}
+\fi
+
+%%% Switch de versions, définie ici "à vide" pour mettre du renewcommand plus tard
+
+\newcommand{\switch}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\noindent BUT, 1ère année \hfill 2021-22
+
+\begin{center} \Large Examen de math \end{center}
+
+
+%%%%%%%%%%%%%%
+
+\subsection*{Exercice 1}
+
+% Dans cet exemple, 1er paramètre assigné = version de l'exo 1 (de 1 à 3). 
+% On nomme la variable en question (pas nécessaire mais plus clair):
+\def\versionExo1{\ListAP[1]} 
+
+\ifnum\versionExo1=1
+    Calculer $a=3+7$.
+\fi
+\ifnum\versionExo1=2
+    Calculer $a=3\times 7$. 
+\fi
+\ifnum\versionExo1=3
+    Calculer $a=21-12$.
+\fi
+Le nombre $a$ est-il pair ou impair~?
+
+% S'il y a souvent besoin d'effectuer cet affichage différencié, on peut inclure la mécanique de différenciation dans une macro d'usage simplifié :
+%       \switch{v1}{v2}{v3}
+\renewcommand{\switch}[3]{%
+    \ifnum\versionExo1=1 #1\fi
+    \ifnum\versionExo1=2 #2\fi
+    \ifnum\versionExo1=3 #3\fi
+}
+
+% ce qui donne comme usage (ici dans la correction):
+\begin{correction}
+    $a=\switch{10}{21}{9}$. Ce nombre est \switch{pair}{impair}{impair}.
+\end{correction}
+
+
+
+%%%%%%%%%%%%%%
+
+% Dans cet exemple, 2e paramètre assigné = version de l'exo 2 (de 1 à 4).
+% Dans cet exemple, 3e paramètre assigné = prénom du protagoniste (ok ça sert à rien^^).
+% On nomme les variables en question (pas nécessaire mais plus clair):
+\def\versionExo2{\ListAP[2]} 
+\def\prenom{\ListAP[3]} 
+
+% Pour se simplifier la vie
+\renewcommand{\switch}[4]{%
+    \ifnum\versionExo2=1 #1\fi
+    \ifnum\versionExo2=2 #2\fi
+    \ifnum\versionExo2=3 #3\fi
+    \ifnum\versionExo2=4 #4\fi
+}
+
+\subsection*{Exercice 2}
+
+Soit le nombre
+\[
+b=\switch{1000}{10}{1}{0.01}
+\]
+Aidez \prenom\ à exprimer $b$ comme une puissance de 10.
+
+\begin{correction}
+On a $b=10^{\switch{3}{1}{0}{-2}}$.
+\end{correction}
+
+
+\end{document}
+
+
