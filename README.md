@@ -10,9 +10,10 @@ Ensemble de scripts sous linux, permettant:
 - de GÉNÉRER des sujets individualisés, avec l'une et/ou l'autre de deux approches:
     1) écrire des versions différentes et les assigner au hasard aux étudiants
     2) personnaliser chaque sujet avec de la génération aléatoire de paramètres
-    
+
+
 -------------------------------------------------------------
-                Les scripts sont illustrés par 3 exemples de complexité croissante
+Les scripts sont illustrés par 3 exemples de complexité croissante:
 
 Exemple 1 : assignation de sujets (préexistants) + envoi par mail + aide à la correction
 
@@ -21,7 +22,7 @@ Exemple 2 : idem + génération de sujets individualisés (basé sur des version
 Exemple 3 : idem + génération de sujets individualisés avec génération aléatoire de paramètres (avec python)
 
 -------------------------------------------------------------
-                EXÉCUTABLES REQUIS
+Exécutables requis:
 
 Pour tous les scripts:
 - ruby (avec quelques "gem" requis -- a priori plutôt standard)
