@@ -11,7 +11,7 @@
 
 import sys
 import numpy as np
-
+import re
 from time import sleep
 
 if len(sys.argv) == 1:
@@ -19,8 +19,7 @@ if len(sys.argv) == 1:
 
 ###############################################################
 
-   
-        
+
 # Fonction de génération pour un seul étudiant:
 
 def generate(outputtex):
@@ -29,24 +28,33 @@ def generate(outputtex):
         
         ######## Fonctions d'aide                 
          
-        # Stocker une variable latex appelée \<valname> (avec le backslash devant)
+        # Stocker une variable latex appelée \<valname> (avec le backslash devant),
         # dans le fichier outputtex, ayant la valeur <val>.
+        # prec = nombre de décimales conservées (uniquement pour les nombres non entiers)
         
-        def stock(valname, val):
+        def stock(valname, val, prec=2):
+            if type(val) == float: 
+                if val.is_integer():
+                    val = int(val)
+                else:
+                    val = round(val,prec)
             fid.write("\\def\\%s{%s}\n"%(valname,str(val)))
-            # https://www.geeksforgeeks.org/string-formatting-in-python/
-            # todo, gérer la précision pour les float
-            # todo, gérer le cas où val est une liste ou un tuple
         
         # Version groupée (voir exemple d'utilisation ci-dessous)
         # En pratique, dico sera "locals()", la liste de toutes les variables locales existantes
         
         def stockfast(dico, selectnames):
-            selectlist = selectnames.split()
+            selectlist = re.split('[ ,]+',selectnames)      # split par " " ou par ","
             for key in dico:
                 if key in selectlist:
                     stock(key,dico[key])            
-                
+        
+        # Convertir une liste (ou np.array) en une string avec un séparateur spécifié
+        
+        def list2str(liste, sep=","):
+            return sep.join([str(x) for x in liste])
+         
+        
         ######## Génération et stockage des paramètres pour l'examen:
 
         vd = np.random.randint(15,25)
@@ -59,8 +67,8 @@ def generate(outputtex):
 #        stock("vd",vd)
 #        etc.
 
-        # stockage groupé
-        stockfast(locals(),"vc vd vq vr ismultiple")
+        # stockage groupé (on peut séparer par des espaces ou virgules indifféremment)
+        stockfast(locals(),"vc,vd,vq, vr ismultiple")
         
 
 ###############################################################
