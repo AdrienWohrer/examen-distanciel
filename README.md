@@ -15,16 +15,14 @@ Ensemble de scripts sous linux, permettant:
 -------------------------------------------------------------
 Les scripts sont illustrés par 3 exemples de complexité croissante:
 
-Exemple 1 : assignation de sujets (préexistants) + envoi par mail + aide à la correction
+- Exemple 1 : assignation de sujets (préexistants) + envoi par mail + aide à la correction
 
-Exemple 2 : idem + génération de sujets individualisés (basé sur des versions de chaque exercice)
+- Exemple 2 : idem + génération de sujets individualisés (basé sur des versions de chaque exercice)
 
-Exemple 3 : idem + génération de sujets individualisés avec génération aléatoire de paramètres (avec python)
+- Exemple 3 : idem + génération de sujets individualisés avec génération aléatoire de paramètres (avec python)
 
 -------------------------------------------------------------
-Exécutables requis:
-
-Pour tous les scripts:
+Exécutables requis, pour tous les scripts:
 - ruby (avec quelques "gem" requis -- a priori plutôt standard)
 - unoconv (version ligne de commande de libreoffice)
 
