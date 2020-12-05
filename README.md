@@ -12,8 +12,7 @@ Ensemble de scipts sous linux, permettant:
     2) personnaliser chaque sujet avec de la génération aléatoire de paramètres
     
 -------------------------------------------------------------
-
-Trois exemples, par ordre de complexité:
+Exemples, par ordre de complexité
 
 Exemple 1 : assignation de sujets (préexistants) + envoi par mail + aide à la correction
 
