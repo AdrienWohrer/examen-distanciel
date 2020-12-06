@@ -3,13 +3,13 @@ Exemple 3 : idem + génération de sujets individualisés avec données aléatoi
 =======================================================================================
 
 
-assignation.ods : coordonnées et assignation des sujets pour chaque étudiant
+assignation.ods : coordonnées pour chaque étudiant
 
 Examen.tex : sources du sujet d'examen (incluant les corrections)
 
-defaultparams.tex : valeurs par défaut des données latex individuelles
-
 generation_aleatoire.py : code de génération aléatoire des données individuelles (ici, par exemple, en python)
+
+defaultparams.tex : valeurs par défaut des données latex individuelles
 
 
 GÉNÉRATION DES DONNÉES
@@ -17,7 +17,9 @@ GÉNÉRATION DES DONNÉES
 
     - Ouvrir un terminal dans ce répertoire, taper 'ruby genere_donnees.rb'
     
-    - Lit "assignation.ods", puis appelle le script python "generation_aleatoire.py". Ceci crée un *fichier de données* latex spécifique, pour chaque étudiant, avec les données aléatoires tirées pour cet étudiant. Par défaut ces fichiers sont créés dans le répertoire "Données_indiv".
+    - Lit "assignation.ods", puis appelle le script python "generation_aleatoire.py".
+      Ceci crée un *fichier de données* latex spécifique, pour chaque étudiant, avec les données aléatoires tirées pour cet étudiant.
+      Par défaut ces fichiers sont créés dans le répertoire "Données_indiv".
     
 
 GÉNÉRATION DES SUJETS
@@ -27,9 +29,11 @@ GÉNÉRATION DES SUJETS
 
     - Lit "assignation.ods", récupère les paramètres de chaque étudiant, et génère son sujet individuel en conséquence, avec pdflatex.
     
-    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent : ouvrir le fichier genere_sujets.rb avec un éditeur de texte
+    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent :
+      ouvrir le fichier genere_sujets.rb avec un éditeur de texte.
 
-    - Lire les sources dans 'Examen.tex', ainsi que le fichiers de données latex individuels, afin de comprendre comment ces variables latex sont "incorporées" dans le texte.
+    - Lire les sources dans 'Examen.tex', ainsi que le fichiers de données latex individuels,
+      afin de comprendre comment ces variables latex sont "incorporées" dans le texte.
     
     
 ENVOI DES SUJETS
