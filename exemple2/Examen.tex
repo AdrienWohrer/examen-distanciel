@@ -66,15 +66,15 @@
 
 % Dans cet exemple, 1er paramètre assigné = version de l'exo 1 (de 1 à 3). 
 % On nomme la variable en question (pas nécessaire mais plus clair):
-\def\versionExo1{\ListAP[1]} 
+\def\versionExo{\ListAP[1]} 
 
-\ifnum\versionExo1=1
+\ifnum\versionExo=1
     Calculer $a=3+7$.
 \fi
-\ifnum\versionExo1=2
+\ifnum\versionExo=2
     Calculer $a=3\times 7$. 
 \fi
-\ifnum\versionExo1=3
+\ifnum\versionExo=3
     Calculer $a=21-12$.
 \fi
 Le nombre $a$ est-il pair ou impair~?
@@ -82,9 +82,9 @@ Le nombre $a$ est-il pair ou impair~?
 % S'il y a souvent besoin d'effectuer cet affichage différencié, on peut inclure la mécanique de différenciation dans une macro d'usage simplifié :
 %       \switch{v1}{v2}{v3}
 \renewcommand{\switch}[3]{%
-    \ifnum\versionExo1=1 #1\fi
-    \ifnum\versionExo1=2 #2\fi
-    \ifnum\versionExo1=3 #3\fi
+    \ifnum\versionExo=1 #1\fi
+    \ifnum\versionExo=2 #2\fi
+    \ifnum\versionExo=3 #3\fi
 }
 
 % ce qui donne comme usage (ici dans la correction):
@@ -99,15 +99,15 @@ Le nombre $a$ est-il pair ou impair~?
 % Dans cet exemple, 2e paramètre assigné = version de l'exo 2 (de 1 à 4).
 % Dans cet exemple, 3e paramètre assigné = prénom du protagoniste (ok ça sert à rien^^).
 % On nomme les variables en question (pas nécessaire mais plus clair):
-\def\versionExo2{\ListAP[2]} 
+\def\versionExo{\ListAP[2]} 
 \def\prenom{\ListAP[3]} 
 
 % Pour se simplifier la vie
 \renewcommand{\switch}[4]{%
-    \ifnum\versionExo2=1 #1\fi
-    \ifnum\versionExo2=2 #2\fi
-    \ifnum\versionExo2=3 #3\fi
-    \ifnum\versionExo2=4 #4\fi
+    \ifnum\versionExo=1 #1\fi
+    \ifnum\versionExo=2 #2\fi
+    \ifnum\versionExo=3 #3\fi
+    \ifnum\versionExo=4 #4\fi
 }
 
 \subsection*{Exercice 2}
