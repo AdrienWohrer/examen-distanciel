@@ -1,0 +1,15 @@
+"Les 5 premières colonnes doivent toujours être présentes, dans cet ordre."::::
+"Une ligne est traitée uniquement si sa colonne ‘GROUPE’ contient un nombre entier positif."::::
+"La colonne ‘NOM DE FICHIER’ contient le nom associé au sujet (et à la correction, et aux données) pour cet étudiant. Astuce : CONCAT(B9 ;’’_’’ ;C9) produit NOM_prenom pour chaque étudiant."::::
+"Les colonnes à partir de la 6è sont libres, ce sont les ‘’paramètres d’assignation’’ qui seront transmis au compilateur latex. Dans cet exemple il n’y en a pas."::::
+::::
+::::
+"GROUPE":"NOM":"PRÉNOM":"EMAIL":"NOM DE FICHIER"
+""::::
+1:"JOHNSON":"Robert":"robert.johnson@crossroads.com_":"JOHNSON_Robert"
+1:"JONES":"Brian":"jonesbrian@adultswim.com_":"JONES_Brian"
+2:"HENDRIX":"Jimi":"james.m.hendrix@electriclady.com_":"HENDRIX_Jimi"
+3:"JOPLIN":"Janis":"jjpearl@haightashbury.com_":"JOPLIN_Janis"
+3:"MORRISON":"Jim":"Jim.morrisson@otherside.com_":"MORRISON_Jim"
+4:"COBAIN":"Kurt":"kurt.cobain@burnout.com_":"COBAIN_Kurt"
+4:"WINEHOUSE":"Amy":"igoback@black.co.uk_":"WINEHOUSE_Amy"
