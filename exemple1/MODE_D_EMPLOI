@@ -13,13 +13,16 @@ ENVOI DES SUJETS
 
     - Lit "assignation.ods", récupère le sujet de chaque étudiant, et lui envoie par mail.
     
-    - Dans cet "exemple 1", les sujets et corrigés sont supposés déjà exister. Voir les exemples 2 et 3 pour la génération individuelle de sujets avec latex.
+    - Dans cet "exemple 1", les sujets et corrigés sont supposés déjà exister. 
+      Voir les exemples 2 et 3 pour la génération individuelle de sujets avec latex.
     
-    - Si le paramètre "ReallySend" est à false, l'envoi n'a pas vraiment lieu. Pour vraiment procéder à l'envoi, ouvrir le fichier envoie_sujets.rb et passer "ReallySend" à true.
+    - Si le paramètre "ReallySend" est à false, l'envoi n'a pas vraiment lieu.
+      Pour vraiment procéder à l'envoi, ouvrir le fichier envoie_sujets.rb et passer "ReallySend" à true.
     
-    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent : ouvrir le fichier envoie_sujets.rb
+    - Les emplacements des sujets, nom de fichier d'assignation, etc, se configurent dans le fichier envoie_sujets.rb
     
-    - Remarque: chaque sujet individuel est renommé au moment de l'envoi, si bien que tous les étudiants reçoivent un sujet avec le même nom unique.
+    - Remarque: chaque sujet individuel est renommé au moment de l'envoi, si bien que
+      tous les étudiants reçoivent un sujet avec le même nom unique.
 
 
 AIDE À LA CORRECTION
@@ -27,11 +30,16 @@ AIDE À LA CORRECTION
 
     - Ouvrir un terminal dans ce répertoire, taper 'ruby aide_correction.rb'
 
-    - Facilite la correction de l'examen en ouvrant/fermant les fenêtres d'un étudiant au suivant, avec les infos données dans "assignation.ods"
+    - Facilite la correction de l'examen en ouvrant/fermant les fenêtres d'un étudiant au suivant,
+      avec les infos données dans "assignation.ods"
     
-    - Nécessite d'avoir récupéré un répertoire avec tous les rendus des étudiants (ici, RENDUS/). L'arborescence doit être celle qu'on obtient lorsqu'on "Télécharge tous les travaux" d'un devoir sous Moodle : chaque étudiant a un sous-répertoire "NOM Prénom et du bla"
+    - Nécessite d'avoir récupéré un répertoire avec tous les rendus des étudiants (ici, RENDUS/). 
+      L'arborescence doit être celle qu'on obtient lorsqu'on "Télécharge tous les travaux" d'un devoir sous Moodle : 
+      chaque étudiant a un sous-répertoire "NOM Prénom et du bla"
     
-    - Doit être configuré avec les bons noms d'exécutables pour lire une photo, ouvrir un pdf, etc. En l'état actuel, ces exécutables sont ceux de Debian. À modifier en cas de distribution Ubuntu, KDE, etc. Ouvrir le fichier aide_correction.rb avec un éditeur, et renseigner les bons noms.
+    - Doit être configuré avec les bons noms d'exécutables pour lire une photo, ouvrir un pdf, etc.
+      En l'état actuel, ces exécutables sont ceux de Debian. À modifier en cas de distribution Ubuntu, KDE, etc.
+      Ouvrir le fichier aide_correction.rb avec un éditeur, et renseigner les bons noms.
 
 
 Exécutables requis:
@@ -44,4 +52,3 @@ Pour tous les scripts:
 Pour l'aide à la correction:
     - un navigateur de fichier, lecteur de photos, lecteur de pdf, etc.
     - wmctrl (manipulation des fenêtres x11 en ligne de commande) -- optionnel
-
