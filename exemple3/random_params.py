@@ -7,7 +7,8 @@
 # génère des données autant de fois que requis, et les sauve dans chacun
 # des fichiers tex spécifiés.
 
-# Remarque: l'intérêt d'utiliser python (plutôt que ruby comme les autres scripts) est de bénéficier des nombreuses fonctionalités numériques du module numpy
+# Remarque: l'intérêt d'utiliser python (plutôt que ruby comme les autres scripts)
+# est de bénéficier des nombreuses fonctionalités numériques du module numpy
 
 import sys
 import numpy as np
