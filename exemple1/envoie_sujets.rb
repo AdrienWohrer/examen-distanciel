@@ -123,6 +123,9 @@ EOF
         end
     else
         # simple affichage
+        puts From
+        puts adresse
+        puts Subject
         puts corps
     end
 end
@@ -151,20 +154,28 @@ end
 
 ### Lecture des lignes du CSV et envoi
 
-IO.readlines(csvfile).each { |l|	
-    data = l.chomp.split(":");              # chomp vire le \n final
-    # 5 premières colonnes (toujours les mêmes)
-    grnum = Integer(data.shift()) rescue nil
-    next unless grnum && grnum >= 0      # Continue uniquement pour les "vraies" lignes, caractérisées par un "vrai" numéro de groupe en 1ère colonne (entir poitif).
-    nom = data.shift().tr('"', '')
-    prenom = data.shift().tr('"', '')
-    adresse = data.shift().tr('"', '')
-    pdfname = data.shift().tr('"', '')
+IO.readlines(csvfile).each_with_index { |l, id|	
+    begin   # (permet de récupérer la ligne d'un éventuel problème)
     
-    sujet_pdf = "#{SujetDir}/#{pdfname}.pdf"
-    puts "Envoi à #{nom} #{prenom}"
-    sendMail(adresse, nom, prenom, sujet_pdf)
-    # gets
+        data = l.chomp.split(":");              # chomp vire le \n final
+        # 5 premières colonnes (toujours les mêmes)
+        grnum = Integer(data.shift()) rescue nil
+        next unless grnum && grnum >= 0      # Continue uniquement pour les "vraies" lignes, caractérisées par un "vrai" numéro de groupe en 1ère colonne (entir poitif).
+        nom = data.shift().tr('"', '')
+        prenom = data.shift().tr('"', '')
+        adresse = data.shift().tr('"', '')
+        pdfname = data.shift().tr('"', '')
+    
+        sujet_pdf = "#{SujetDir}/#{pdfname}.pdf"
+        puts "Envoi à #{nom} #{prenom}"
+        sendMail(adresse, nom, prenom, sujet_pdf)
+    
+    rescue Exception => e
+        puts "ERREUR, pendant le traitement de la ligne #{id+1}, du fichier de notes #{csvfile} :"
+        puts e.message
+        print "\n"+e.backtrace.join("\n")+"\n"
+        exit(1)
+    end
 }
 
 puts "Passer ReallySend à true pour vraiment procéder à l'envoi" unless ReallySend

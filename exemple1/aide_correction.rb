@@ -11,6 +11,8 @@
 # ruby aide_correction.rb           [démarre au premier étudiant]
 # ruby aide_correction.rb Dupont    [commence à partir de l'étudiant Dupont]
 
+# Attention, le script ne décompresse pas tout seul les archives.
+# Pour ce faire, le plus simple est d'exécuter
 # Exécutables nécessaires à installer :
 # * unoconv : version 'ligne de commande' de libreoffice.
 # * wmctrl : gestion en ligne de commande des fenêtres graphiques [optionnel]
@@ -23,6 +25,11 @@
 #       --> Survient si le fichier .ods avec la liste des étudiants est déjà ouvert. Juste relancer le script.
 # * Le script ne décompresse pas automatiquement les archives
 #       --> décompresser 'à la main' le .zip de l'étudiant, faire 'étudiant précédent' [p+Entrée] puis 'étudiant suivant' [Entrée] pour recharger le rendu (maintenant décompressé) de l'étudiant
+
+
+# TODO
+# mieux gérer les spawn, créer des group process afin d'accéder aux fenêtres directement à partir des PID, etc.
+# https://ruby-doc.org/core-2.6.1/Process.html
 
 
 # Configuration
@@ -103,8 +110,10 @@ end
 puts etudiants
 
 
-# Fonction d'ouverture d'un nouvel étudiant
-##########################################################
+
+# Fonctions principales : ouverture de fichiers/répertoires, gestion des fenêtres, etc.
+#######################################################################################
+
 
 # Vérifie si wmctrl est installé sur le système
 $wmctrl = `which wmctrl`.delete!("\n")
@@ -113,59 +122,90 @@ if not $is_wmctrl
     puts "WARNING !!! wmctrl n'est pas installé, on ne pourra pas dimensionner, ni fermer automatiquement les fenêtres"
     sleep(3)
 end
-    
-# Fonction utilitaire : récupérer l'identifiant x11 de la fenêtre associée à un nom donné
-# https://unix.stackexchange.com/questions/43106/how-to-set-window-size-and-location-of-an-application-on-screen-via-command-line
-# Nécessite d'avoir installé wmctrl (sous linux)
 
-def trouve_fenetre(name)
-    return nil unless $is_wmctrl
-    widline = ""
-    nameescaped = name.gsub(/([\[\]])/){|c| "\\"+c}  # escape d'éventuels [,] pour l'appel à grep
-    begin
-        Timeout::timeout(5) do
-            while widline=="" do      # pour attendre que la fenêtre soit créée
-                widline = `#{$wmctrl} -l | grep "#{nameescaped}"`
-            end
-        end
-        widline.split(" ")[0]  # identifiant de la fenêtre = code hexa avant le premier espace
-    rescue Timeout::Error
-        puts "WARNING: fenêtre #{name} non trouvée, ne pourra pas être positionnée, ni fermée automatiquement."
-        nil
+
+# Fonction utilitaire: Array des identifiants x11 des fenêtres actuellement ouvertes
+
+def current_windows
+    if $is_wmctrl 
+        `#{$wmctrl} -l`.split("\n").map{ |widline| widline.split(" ")[0]  }     # identifiant de la fenêtre = code hexa avant le premier espace
+    else
+        []
     end
 end
+
+
+# Fonction utilitaire: ferme une (ou des) fenêtre(s), identifiée par son identifiant x11
+
+def close_window(wid)
+    if wid.respond_to?(:each)              # close Array of windows
+        wid.each{ |w| close_window(w) }
+    else                                    # close single window
+        `#{$wmctrl} -i -c #{wid}` if $is_wmctrl and not wid.nil?
+    end
+end
+
+
+# Fonction utilitaire:
+# - lance un processus détaché (spawn)
+# - renvoie un Array des identifiants x11 de(s) fenêtre(s) créée(s) [fiable uniquement pour la première créée]
+
+def my_spawn(command)
+    windowsbefore = current_windows
+    sleep(0.1)
+    Process.detach spawn(command)
+    newwindows = []
+    if $is_wmctrl
+        begin
+            Timeout::timeout(4) do
+                while newwindows.empty? do      # pour attendre que la fenêtre soit créée
+                    newwindows = current_windows - windowsbefore
+                    sleep(0.1)
+                end
+            end
+        rescue Timeout::Error
+            puts "WARNING: nouvelle(s) fenêtre(s) associées à la commande #{command} non trouvées; ne pourront pas être positionnées, ni fermées automatiquement."
+        end
+    end
+    newwindows
+end
+    
 
 # Fonction utilitaire:
 # - ouvre un fichier (suivant son extension) ou un répertoire
 # - en option, redimensionne la fenêtre: pos = "xupperleft,yupperleft,w,h" (string)
-# - renvoie son identifiant de fenêtre (avec wmctrl)
+# - renvoie les identifiants de fenêtre (avec wmctrl) sous forme d'un Array
 
 def ouvre_dans_fenetre(path, pos=nil)
     if File.directory?(path)
-        spawn("#{$filenavigator} \"#{path}\"")
+        command = "#{$filenavigator} \"#{path}\""
     else
         ext = File.extname(path).downcase
         case ext
         when ".jpg", ".jpeg", ".png", ".bmp"
-            spawn("#{$imageviewer} \"#{path}\"")
+            command = "#{$imageviewer} \"#{path}\""
         when ".pdf"
-            spawn("#{$pdfviewer} \"#{path}\"")
+            command = "#{$pdfviewer} \"#{path}\""
         when ".txt"
-            spawn("#{$texteditor} \"#{path}\"")
+            command = "#{$texteditor} \"#{path}\""
         when ".odt", ".docx"
-            spawn("#{$office} \"#{path}\"")
+            command = "#{$office} \"#{path}\""
         else
             puts "WARNING: unknown file format : #{ext}"
             puts path
+            return []
         end
     end
-    wid = trouve_fenetre(File.basename(path))       
-    #puts "#{path} : #{wid}"
-    unless wid.nil? || pos.nil?
+    wids = my_spawn(command)
+    #puts "#{path} : #{wids}"
+    
+    # repositionne, si demandé
+    wids.map do |wid|
         `#{$wmctrl} -i -r #{wid} -b remove,maximized_vert -b remove,maximized_horz`
         `#{$wmctrl} -i -r #{wid} -e 0,#{pos}`  # -e 0,x(upleft),y(upleft),w,h
-    end
-    wid
+    end unless pos.nil?
+    
+    wids
 end
                 
 
@@ -179,11 +219,11 @@ def ouvre_etudiant(h)
     puts "OUVERTURE du dossier : #{nom}, #{prenom}"
     
     # Ouvre le corrigé + essaye de dimensionner la fenêtre
-    wid_corrige = ouvre_dans_fenetre("#{$correcdir}/#{filename}.pdf", $pos_corrige)
+    wids_corrige = ouvre_dans_fenetre("#{$correcdir}/#{filename}.pdf", $pos_corrige)
     
-    # Dossier de rendu étudiant. Doit nécessairement commencer par "NOM Prénom..."
+    # Ouvre le dossier de rendu étudiant. Doit nécessairement commencer par "NOM Prénom..."
     rendu_etud = Dir.glob("#{$rendudir}/#{nom} #{prenom}*")
-    wid_rendu = Array.new
+    wids_rendu = Array.new
     
     if rendu_etud.empty?
         puts "WARNING: AUCUN RENDU trouvé à l'emplacement suivant: #{$rendudir}/#{nom} #{prenom}*"
@@ -197,7 +237,7 @@ def ouvre_etudiant(h)
     else
         rendu_etud = rendu_etud[0]
         # fenetre avec le répertoire (peut aider en cas de pb)
-        wid_rendu.push ouvre_dans_fenetre(rendu_etud, $pos_rendu)
+        wids_rendu += ouvre_dans_fenetre(rendu_etud, $pos_rendu)
         
         # Parcourt le dossier de rendu étudiant et ouvre tous les pdf/images
         #       (reverse_each pour respecter l'ordre logique d'empilement des pdf 1,2,3...)
@@ -205,19 +245,19 @@ def ouvre_etudiant(h)
             if FileTest.directory?(path)   
                 # fenêtre unique pour toutes les IMAGES éventuellement présentes dans ce répertoire
                 yo = Dir.glob("#{path}/*.{jpg,jpeg,png,bmp,JPG,JPEG,PNG,BMP}")
-                wid_rendu.push ouvre_dans_fenetre(yo[0], $pos_rendu) unless yo.empty?
+                wids_rendu += ouvre_dans_fenetre(yo[0], $pos_rendu) unless yo.empty?
             else
                 # une fenêtre individuelle pour chaque fichier de type pdf et texte
                 case File.extname(path).downcase
                 when ".jpg", ".jpeg", ".png", ".bmp"    # déjà traité au niveau du répertoire
                 else
-                    wid_rendu.push ouvre_dans_fenetre(path, $pos_rendu)
+                    wids_rendu += ouvre_dans_fenetre(path, $pos_rendu)
                 end
             end
         end
     end
     
-    [wid_corrige, wid_rendu]
+    [wids_corrige, wids_rendu]
 end
 
 # test
@@ -225,6 +265,32 @@ end
 #exit
 
 
+# Boucle préliminaire : décompression d'éventuelles archives
+#############################################################
+
+
+# extensions associées à des archives (à compléter si j'en oublie)
+archiveext = "zip,tar,rar,gz,xz,7z,bz2,zipx,zz"
+
+dirs_with_archive = Find.find(".").select do |path|
+    FileTest.directory?(path) and Dir.glob("#{path}/*.{#{archiveext}}").size > 0
+end
+
+unless dirs_with_archive.empty?
+    puts "Des fichiers d'archive ont été repérés. Chaque répertoire contenant une archive va être ouvert."
+    puts "Décompressez à la main chaque archive rencontrée, puis détruisez le fichier d'archive (afin d'éviter cette étape la prochaine fois)."
+    puts "Appuyez sur entrée pour passer au répertoire suivant."
+    STDIN.gets.chomp
+end
+
+dirs_with_archive.each do |path|
+    wid = ouvre_dans_fenetre(path)
+    puts "Décompressez du contenu si nécessaire, puis tapez entrée pour répertoire suivant"
+    STDIN.gets.chomp
+    close_window(wid)
+end
+
+        
 # Boucle pour parcourir les étudiants
 ##########################################################
 
@@ -242,18 +308,17 @@ if ARGV.size > 0
 end
 
 while true
-    wid_corrige, wid_rendu = ouvre_etudiant(etudiants[currid])
+    wids_corrige, wids_rendu = ouvre_etudiant(etudiants[currid])
     puts "ETUDIANT SUIVANT [entrée] / PRÉCÉDENT [p puis entrée] ?" 
     reply = STDIN.gets.chomp
     puts reply
 
-    # tue les vieilles fenêtres (nécessite wmctrl)
-    allwids = wid_rendu.dup.push(wid_corrige)
-    #puts allwids
+    # tue les vieilles fenêtres
+    allwids = wids_rendu + wids_corrige
     10.times do
-        allwids.each { |wid| `#{$wmctrl} -i -c #{wid}` unless wid.nil? }
+        allwids.each { |wid| close_window(wid) }
         sleep(0.1)
-    end if $is_wmctrl
+    end
     
     # nouvel étudiant
     if reply[0] == 'p'
@@ -261,6 +326,8 @@ while true
     else
         currid += 1
     end
+    
+    exit 0 if currid == etudiants.size
 end
 
 
