@@ -11,35 +11,42 @@
 # est de bénéficier des nombreuses fonctionalités numériques du module numpy
 
 import sys
-import numpy as np
-import re
-from time import sleep
+import numpy as np      # Numpy
+import numbers          # Numeric abstract base classes
+import re               # Regular expressions
+
 
 if len(sys.argv) == 1:
     sys.argv += ["defaultparams.tex"]  # (fichier produit par défaut lorsqu'on appelle la fonction sans argument)
 
+
 ###############################################################
+### Génération du .tex pour chaque étudiant
 
 
-# Fonction de génération pour un seul étudiant:
-
-def generate(outputtex):
+for outputtex in sys.argv[1:]:
     with open(outputtex, 'w') as fid:
         fid.write('%% Généré automatiquement avec le script python random_params.py\n');
         
         ######## Fonctions d'aide                 
          
+        # conversion en str, traitant les "float entier" comme des int (fait automatiquement en python 3)
+        
+        def mystr(val,prec=2):
+            if isinstance(val,numbers.Number):
+                val = float(val)
+                if val.is_integer():
+                    val = int(val)
+                else:
+                    val = round(val,prec)
+            return str(val)
+        
         # Stocker une variable latex appelée \<valname> (avec le backslash devant),
         # dans le fichier outputtex, ayant la valeur <val>.
         # prec = nombre de décimales conservées (uniquement pour les nombres non entiers)
         
         def stock(valname, val, prec=2):
-            if type(val) == float: 
-                if val.is_integer():
-                    val = int(val)
-                else:
-                    val = round(val,prec)
-            fid.write("\\def\\%s{%s}\n"%(valname,str(val)))
+            fid.write("\\def\\%s{%s}\n"%(valname,mystr(val,prec)))
         
         # Version groupée (voir exemple d'utilisation ci-dessous)
         # En pratique, dico sera "locals()", la liste de toutes les variables locales existantes
@@ -53,7 +60,7 @@ def generate(outputtex):
         # Convertir une liste (ou np.array) en une string avec un séparateur spécifié
         
         def list2str(liste, sep=","):
-            return sep.join([str(x) for x in liste])
+            return sep.join([mystr(x) for x in liste])
          
         
         ######## Génération et stockage des paramètres pour l'examen:
@@ -71,12 +78,5 @@ def generate(outputtex):
         # stockage groupé (on peut séparer par des espaces ou virgules indifféremment)
         stockfast(locals(),"vc,vd,vq, vr ismultiple")
         
-
-###############################################################
-    
-# Appel de la fonction sur tous les étudiants:
-
-for outputtex in sys.argv[1:]:
-    generate(outputtex)
 
 

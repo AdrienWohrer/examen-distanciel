@@ -94,14 +94,14 @@ IO.readlines(csvfile).each do |l|
         FileUtils.mkdir "#{pdfdir}" if not Dir.exists? "#{pdfdir}"
         FileUtils.mkdir "#{$builddir}" if not Dir.exists? "#{$builddir}"
         
-        pdflatex_command = "pdflatex -jobname=\"#{filename}\" -output-directory #{$builddir} \"\\def\\iscorrec{#{iscorrec}} \\def\\texperso{#{texperso}} \\def\\assignedparameters{#{assignedparameters}} \\input{#{$source}}\""
+        pdflatex_command = "pdflatex -jobname=\"#{filename}\" -output-directory #{$builddir} \"\\def\\iscorrec{#{iscorrec}} \\def\\texperso{\\\"#{texperso}\\\"} \\def\\assignedparameters{#{assignedparameters}} \\input{#{$source}}\""
         
         if not system(pdflatex_command)
             warn "pdflatex error"
             exit(1)
         end
         FileUtils.mv("#{$builddir}/#{filename}.pdf",pdfdir)
-        FileUtils.rm_r Dir.glob("#{$builddir}/*")
+        FileUtils.rm_r "#{$builddir}"
   end
 
 end
