@@ -23,8 +23,6 @@
 # pour installer un gem manquant, par exemple le gem 'highline' :
 # sudo gem install highline
 
-require 'rubygems'
-require 'highline/import'
 require 'net/smtp'
 require 'mail'      # gère tous types de serveurs d'envoi et permet de joindre facilement des fichiers (contrairement à net/smtp où j'ai eu des problèmes). 
 # https://www.rubydoc.info/github/mikel/mail
