@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # -*- coding: utf-8 -*-
 
-# Génération individuelle des données de l'examen, via l'appel au script python "generation_donnees.py"
+# Génération individuelle des données de l'examen, via l'appel au script python "random_params.py"
 
 # Lancement : 
 # ruby genere_donnees.rb
@@ -23,7 +23,6 @@
 # pour installer un gem manquant, par exemple le gem 'machin' :
 # sudo gem install machin
 
-require 'rubygems'
 require 'fileutils'
 
 # Configuration
