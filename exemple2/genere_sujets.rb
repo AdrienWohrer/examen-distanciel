@@ -22,7 +22,6 @@
 # pour installer un gem manquant, par exemple le gem 'machin' :
 # sudo gem install machin
 
-require 'rubygems'
 require 'fileutils'
 
 # Configuration
