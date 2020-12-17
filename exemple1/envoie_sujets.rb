@@ -45,6 +45,14 @@ From='adrien.wohrer@uca.fr'
 MTA='smtp.uca.fr'
 Subject="Math -- Examen"
 
+InteractivePwd = true
+#   true  ->  demande le MDP de la boîte mail lors l'exécution. Plus sécure. Nécessite le gem highline.
+#  false  ->  entrer le MDP de la boîte mail en dur, en argument de l'appel. Moins sécure. Ne nécessite pas le gem highline.
+#             - usage basique dans ce cas :     ruby envoie_sujets.rb monmotdepasse
+#             - permet aussi le scheduling :    echo "ruby envoie_sujets.rb monmotdepasse" | at 13h25
+
+require 'highline/import' if InteractivePwd
+
 
 # Demande de mot de passe pour le serveur mail (fonction)
 #####################################
@@ -53,10 +61,10 @@ $mail_initialized = false
 def initMail
     if not $mail_initialized
         # récupération du mot de passe
-        pwd = ask("Enter your password for connection to the smtp server:  ") { |q| q.echo = "*" }  
-        # version bis, avec pwd dans l'appel à la fonction. Moins sécure, mais utile pour programmer des envois en avance:
-        # pwd = ARGV[0] 
-
+        pwd = InteractivePwd ? 
+            ask("Enter your password for connection to the smtp server:  ") { |q| q.echo = "*" } : 
+            ARGV[0]
+        
         # https://medium.com/derek-gc/sending-emails-in-ruby-with-smtp-3d40bed6c437
         Mail.defaults do
             delivery_method :smtp, address: MTA, port: 587, password: pwd, authentication: :login, user_name: From
